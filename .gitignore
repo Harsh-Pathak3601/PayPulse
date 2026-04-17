@@ -1,0 +1,14 @@
+# Ignore sensitive files
+.env
+
+# Maven build artifacts
+target/
+*.war
+
+# IDE files
+.idea/
+.settings/
+.project/
+.classpath/
+*.iml
+bin/

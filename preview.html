@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayPulse — UI Preview</title>
+    <link rel="stylesheet" href="src/main/webapp/css/style.css">
+    <style>
+        .sidebar { position: fixed; height: 100vh; width: 260px; }
+        .main-content { margin-left: 260px; }
+        @media (max-width: 768px) { .main-content { margin-left: 0; } }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo" style="padding: 24px; text-align: center;">
+                <img src="src/main/webapp/public/images/logo.png" alt="PayPulse Logo" style="height: 42px; width: auto;">
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main Menu</div>
+                <a href="#" class="nav-item active"><span class="nav-icon">🏠</span> Dashboard</a>
+                <div class="nav-section-label" style="margin-top:16px;">Employees</div>
+                <a href="#" class="nav-item"><span class="nav-icon">👥</span> All Employees</a>
+                <a href="#" class="nav-item"><span class="nav-icon">➕</span> Add Employee</a>
+                <div class="nav-section-label" style="margin-top:16px;">Payroll</div>
+                <a href="#" class="nav-item"><span class="nav-icon">📊</span> Payroll History</a>
+                <a href="#" class="nav-item"><span class="nav-icon">💰</span> Generate Salary</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar">A</div>
+                    <div class="user-info">
+                        <div class="user-name">Admin User</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+                <a href="#" class="nav-item" style="margin-top:8px; color:var(--accent-danger);"><span class="nav-icon">🚪</span> Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div>
+                    <div class="top-bar-title">Dashboard Overview</div>
+                    <div class="top-bar-sub">Powered by <strong>PayPulse</strong></div>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="btn btn-primary btn-sm">➕ Add New Employee</button>
+                </div>
+            </header>
+
+            <div class="page-body">
+                <div class="stats-grid">
+                    <div class="stat-card stat-blue">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Total Employees</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-green">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-info">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Payroll Records</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-purple">
+                        <div class="stat-icon">🏢</div>
+                        <div class="stat-info">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Departments</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-orange">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-value">₹0</div>
+                            <div class="stat-label">Monthly Payout</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">📊 Recent Employment Activity</div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Emp ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Designation</th>
+                                    <th>Net Salary</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="table-empty">
+                                            <div class="empty-icon">👤</div>
+                                            <p>No employees found in <strong>PayPulse</strong>. Add your first record!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
