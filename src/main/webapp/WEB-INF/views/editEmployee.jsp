@@ -66,34 +66,25 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="department">Department <span class="required">*</span></label>
-                            <input
-                                type="text"
-                                id="department"
-                                name="department"
-                                required
-                                maxlength="50"
-                                list="deptSuggestions"
-                                value="<c:out value='${employee.department}'/>"
-                            />
-                            <datalist id="deptSuggestions">
-                                <option value="Engineering"/><option value="Finance"/>
-                                <option value="Human Resources"/><option value="Marketing"/>
-                                <option value="Operations"/><option value="Product"/>
-                                <option value="Sales"/><option value="IT"/>
-                            </datalist>
+                            <label for="deptId">Department <span class="required">*</span></label>
+                            <select name="deptId" id="deptId" class="form-control" required>
+                                <c:forEach var="d" items="${departments}">
+                                    <option value="${d.deptId}" ${d.deptId == employee.deptId ? 'selected' : ''}>
+                                        ${d.deptName}
+                                    </option>
+                                </c:forEach>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label for="designation">Designation <span class="required">*</span></label>
-                            <input
-                                type="text"
-                                id="designation"
-                                name="designation"
-                                required
-                                maxlength="80"
-                                value="<c:out value='${employee.designation}'/>"
-                            />
+                            <select name="designation" id="designation" class="form-control" required>
+                                <c:forEach var="des" items="${designations}">
+                                    <option value="${des.desigName}" ${des.desigName == employee.designation ? 'selected' : ''}>
+                                        ${des.desigName}
+                                    </option>
+                                </c:forEach>
+                            </select>
                         </div>
 
                         <div class="form-group">

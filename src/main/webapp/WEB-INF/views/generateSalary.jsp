@@ -34,9 +34,23 @@
                     <div class="card-title">📋 Payroll Generation</div>
                 </div>
 
-                <c:if test="${not empty error}">
+                <c:if test="${not empty param.error}">
                     <div class="alert alert-error mb-16">
-                        <span class="alert-icon">⚠️</span> ${error}
+                        <span class="alert-icon">⚠️</span>
+                        <c:choose>
+                            <c:when test="${param.error == 'AlreadyGenerated'}">
+                                A salary slip has already been generated for this employee for the current month!
+                            </c:when>
+                            <c:when test="${param.error == 'NoEmployee'}">
+                                Please select an employee.
+                            </c:when>
+                            <c:when test="${param.error == 'NotFound'}">
+                                The selected employee could not be found.
+                            </c:when>
+                            <c:otherwise>
+                                An error occurred while generating the salary. Please try again.
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </c:if>
 

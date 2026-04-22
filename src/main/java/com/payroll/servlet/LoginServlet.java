@@ -52,6 +52,7 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = req.getSession(true);
             session.setAttribute("loggedIn", true);
             session.setAttribute("adminUser", username.trim());
+            session.setAttribute("role", "ADMIN");
             session.setMaxInactiveInterval(30 * 60);
 
             resp.sendRedirect(req.getContextPath() + "/dashboard");

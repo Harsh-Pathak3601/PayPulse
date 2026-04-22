@@ -42,7 +42,7 @@
 ### 1. Database
 Import the SQL schema to create your tables:
 ```bash
-mysql -u root -p < database/schema.sql
+mysql -u root -p < database/schema_v2.sql
 ```
 
 ### 2. Configuration

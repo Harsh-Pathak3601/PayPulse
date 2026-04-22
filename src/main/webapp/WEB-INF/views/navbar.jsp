@@ -1,9 +1,3 @@
-<%--
-    navbar.jsp - Reusable sidebar navigation fragment.
-    Include in every protected page using:
-        <jsp:include page="/WEB-INF/views/navbar.jsp" />
-    Expects request attribute "activePage" to highlight current nav item.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <aside class="sidebar">
@@ -27,10 +21,22 @@
            class="nav-item ${activePage eq 'employees' ? 'active' : ''}">
             <span class="nav-icon">👥</span> All Employees
         </a>
+        
+        <a href="${pageContext.request.contextPath}/departments"
+           class="nav-item ${activePage eq 'departments' ? 'active' : ''}">
+            <span class="nav-icon">🏢</span> Departments
+        </a>
 
-        <a href="${pageContext.request.contextPath}/employees?action=add"
-           class="nav-item ${activePage eq 'addEmployee' ? 'active' : ''}">
-            <span class="nav-icon">➕</span> Add Employee
+        <div class="nav-section-label" style="margin-top:16px;">Operations</div>
+
+        <a href="${pageContext.request.contextPath}/attendance"
+           class="nav-item ${activePage eq 'attendance' ? 'active' : ''}">
+            <span class="nav-icon">📅</span> Attendance
+        </a>
+
+        <a href="${pageContext.request.contextPath}/leaves"
+           class="nav-item ${activePage eq 'leaves' ? 'active' : ''}">
+            <span class="nav-icon">🍃</span> Leave Requests
         </a>
 
         <div class="nav-section-label" style="margin-top:16px;">Payroll</div>
@@ -43,6 +49,13 @@
         <a href="${pageContext.request.contextPath}/payroll?action=generate"
            class="nav-item ${activePage eq 'generateSalary' ? 'active' : ''}">
             <span class="nav-icon">💰</span> Generate Salary
+        </a>
+        
+        <div class="nav-section-label" style="margin-top:16px;">Analytics</div>
+        
+        <a href="${pageContext.request.contextPath}/reports"
+           class="nav-item ${activePage eq 'reports' ? 'active' : ''}">
+            <span class="nav-icon">📈</span> Reports
         </a>
     </nav>
 

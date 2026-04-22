@@ -95,7 +95,7 @@
                                 <th>Department</th>
                                 <th>Designation</th>
                                 <th>Basic Salary</th>
-                                <th>Net Salary</th>
+                                <th>Join Date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -117,8 +117,8 @@
                                             <td>
                                                 ₹<fmt:formatNumber value="${emp.basicSalary}" pattern="#,##0.00"/>
                                             </td>
-                                            <td style="color:var(--accent-success); font-weight:700;">
-                                                ₹<fmt:formatNumber value="${emp.netSalary}" pattern="#,##0.00"/>
+                                            <td style="color:var(--text-muted);">
+                                                <fmt:formatDate value="${emp.joinDate}" pattern="MMM dd, yyyy"/>
                                             </td>
                                             <td>
                                                 <div class="d-flex gap-8">

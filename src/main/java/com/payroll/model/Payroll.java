@@ -4,38 +4,30 @@ import java.sql.Date;
 
 /**
  * Payroll - POJO representing a payroll record.
- * Maps directly to the `payroll` table in the database.
+ * Updated for enterprise version v2.0 with detailed deductions.
  */
 public class Payroll {
 
     private int    payrollId;
     private int    empId;
-    private String empName;       // Joined from employees table for display
-    private String department;    // Joined from employees table for display
-    private double basicSalary;   // Snapshot at time of generation
+    private String empName;       
+    private String department;    
+    private double basicSalary;   
     private double hra;
     private double da;
     private double bonus;
-    private double deductions;
+    private double pfDeduction;
+    private double esiDeduction;
+    private double tdsDeduction;
+    private double lopDeduction;
+    private double grossSalary;
     private double netSalary;
+    private int    workingDays;
+    private int    paidDays;
+    private double overtimePay;
     private Date   payDate;
 
-    // ── Constructors ────────────────────────────────────────────────────────────
-
     public Payroll() {}
-
-    public Payroll(int empId, double basicSalary, double hra,
-                   double da, double bonus, double deductions,
-                   double netSalary, Date payDate) {
-        this.empId       = empId;
-        this.basicSalary = basicSalary;
-        this.hra         = hra;
-        this.da          = da;
-        this.bonus       = bonus;
-        this.deductions  = deductions;
-        this.netSalary   = netSalary;
-        this.payDate     = payDate;
-    }
 
     // ── Getters & Setters ───────────────────────────────────────────────────────
 
@@ -63,12 +55,38 @@ public class Payroll {
     public double getBonus()             { return bonus; }
     public void   setBonus(double v)     { this.bonus = v; }
 
-    public double getDeductions()         { return deductions; }
-    public void   setDeductions(double v) { this.deductions = v; }
+    public double getPfDeduction() { return pfDeduction; }
+    public void setPfDeduction(double pfDeduction) { this.pfDeduction = pfDeduction; }
 
-    public double getNetSalary()          { return netSalary; }
-    public void   setNetSalary(double v)  { this.netSalary = v; }
+    public double getEsiDeduction() { return esiDeduction; }
+    public void setEsiDeduction(double esiDeduction) { this.esiDeduction = esiDeduction; }
 
-    public Date   getPayDate()            { return payDate; }
-    public void   setPayDate(Date d)      { this.payDate = d; }
+    public double getTdsDeduction() { return tdsDeduction; }
+    public void setTdsDeduction(double tdsDeduction) { this.tdsDeduction = tdsDeduction; }
+
+    public double getLopDeduction() { return lopDeduction; }
+    public void setLopDeduction(double lopDeduction) { this.lopDeduction = lopDeduction; }
+
+    public double getGrossSalary() { return grossSalary; }
+    public void setGrossSalary(double grossSalary) { this.grossSalary = grossSalary; }
+
+    public double getNetSalary() { return netSalary; }
+    public void setNetSalary(double netSalary) { this.netSalary = netSalary; }
+
+    public int getWorkingDays() { return workingDays; }
+    public void setWorkingDays(int workingDays) { this.workingDays = workingDays; }
+
+    public int getPaidDays() { return paidDays; }
+    public void setPaidDays(int paidDays) { this.paidDays = paidDays; }
+
+    public double getOvertimePay() { return overtimePay; }
+    public void setOvertimePay(double overtimePay) { this.overtimePay = overtimePay; }
+
+    public Date getPayDate() { return payDate; }
+    public void setPayDate(Date payDate) { this.payDate = payDate; }
+    
+    // Total deductions for convenience in JSP
+    public double getTotalDeductions() {
+        return pfDeduction + esiDeduction + tdsDeduction + lopDeduction;
+    }
 }

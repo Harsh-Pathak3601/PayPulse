@@ -102,7 +102,7 @@
                                                 ₹<fmt:formatNumber value="${p.bonus}" pattern="#,##0.00"/>
                                             </td>
                                             <td style="color:var(--accent-danger);">
-                                                ₹<fmt:formatNumber value="${p.deductions}" pattern="#,##0.00"/>
+                                                ₹<fmt:formatNumber value="${p.totalDeductions}" pattern="#,##0.00"/>
                                             </td>
                                             <td style="font-weight:800; color:var(--accent-primary); font-size:0.95rem;">
                                                 ₹<fmt:formatNumber value="${p.netSalary}" pattern="#,##0.00"/>

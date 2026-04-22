@@ -1,151 +1,121 @@
 package com.payroll.servlet;
 
+import com.payroll.dao.AttendanceDAO;
 import com.payroll.dao.EmployeeDAO;
 import com.payroll.dao.PayrollDAO;
 import com.payroll.model.Employee;
 import com.payroll.model.Payroll;
+import com.payroll.util.EmailService;
+import com.payroll.util.SessionUtil;
+import com.payroll.util.TaxCalculator;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.util.List;
-
-/**
- * PayrollServlet - Handles salary generation, salary slip display,
- * and viewing payroll history per employee.
- *
- * Routes:
- *  GET  /payroll                          → list all payroll history
- *  GET  /payroll?action=generate          → show employee selection for generation
- *  POST /payroll?action=generate          → compute & save payroll, show slip
- *  GET  /payroll?action=history&empId=X   → payroll history for employee X
- *  GET  /payroll?action=slip&payrollId=X  → view a specific payroll slip
- */
+import java.sql.Date;
+import java.time.LocalDate;
 @WebServlet("/payroll")
 public class PayrollServlet extends HttpServlet {
 
     private final EmployeeDAO employeeDAO = new EmployeeDAO();
     private final PayrollDAO  payrollDAO  = new PayrollDAO();
+    private final AttendanceDAO attendanceDAO = new AttendanceDAO();
 
-    private boolean isAuthenticated(HttpServletRequest req) {
-        HttpSession s = req.getSession(false);
-        return s != null && s.getAttribute("loggedIn") != null;
-    }
-
-    // ── GET ──────────────────────────────────────────────────────────────────────
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        if (!isAuthenticated(req)) { resp.sendRedirect(req.getContextPath() + "/login"); return; }
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SessionUtil.requireAdmin(req, resp);
 
         String action = req.getParameter("action");
         if (action == null) action = "list";
 
         switch (action) {
             case "generate":
-                showGenerateForm(req, resp);
-                break;
-            case "history":
-                showEmployeeHistory(req, resp);
+                req.setAttribute("employees", employeeDAO.getAllEmployees());
+                req.setAttribute("activePage", "generateSalary");
+                req.getRequestDispatcher("/WEB-INF/views/generateSalary.jsp").forward(req, resp);
                 break;
             default:
-                listAllPayroll(req, resp);
+                req.setAttribute("payrolls", payrollDAO.getAllPayroll());
+                req.setAttribute("activePage", "payroll");
+                req.getRequestDispatcher("/WEB-INF/views/payrollHistory.jsp").forward(req, resp);
         }
     }
 
-    // ── POST ─────────────────────────────────────────────────────────────────────
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        if (!isAuthenticated(req)) { resp.sendRedirect(req.getContextPath() + "/login"); return; }
-
-        String action = req.getParameter("action");
-        if ("generate".equals(action)) {
-            generateSalary(req, resp);
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/payroll");
-        }
-    }
-
-    // ── Handlers ─────────────────────────────────────────────────────────────────
-
-    private void listAllPayroll(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        List<Payroll> allPayrolls = payrollDAO.getAllPayroll();
-        req.setAttribute("payrolls", allPayrolls);
-        req.getRequestDispatcher("/WEB-INF/views/payrollHistory.jsp").forward(req, resp);
-    }
-
-    private void showGenerateForm(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        req.setAttribute("employees", employeeDAO.getAllEmployees());
-        req.getRequestDispatcher("/WEB-INF/views/generateSalary.jsp").forward(req, resp);
-    }
-
-    private void generateSalary(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SessionUtil.requireAdmin(req, resp);
 
         String empIdStr = req.getParameter("empId");
         if (empIdStr == null || empIdStr.trim().isEmpty()) {
-            req.setAttribute("error", "Please select an employee.");
-            req.setAttribute("employees", employeeDAO.getAllEmployees());
-            req.getRequestDispatcher("/WEB-INF/views/generateSalary.jsp").forward(req, resp);
+            resp.sendRedirect(req.getContextPath() + "/payroll?action=generate&error=NoEmployee");
             return;
         }
 
-        try {
-            int empId = Integer.parseInt(empIdStr.trim());
-            Employee emp = employeeDAO.getEmployeeById(empId);
+        int empId = Integer.parseInt(empIdStr.trim());
+        Employee emp = employeeDAO.getEmployeeById(empId);
+        if (emp == null) {
+            resp.sendRedirect(req.getContextPath() + "/payroll?action=generate&error=NotFound");
+            return;
+        }
 
-            if (emp == null) {
-                req.setAttribute("error", "Employee not found.");
-                req.setAttribute("employees", employeeDAO.getAllEmployees());
-                req.getRequestDispatcher("/WEB-INF/views/generateSalary.jsp").forward(req, resp);
-                return;
-            }
+        // Logic for Attendance-based salary
+        LocalDate now = LocalDate.now();
+        
+        // Prevent duplicate generation for the current month
+        if (payrollDAO.payrollExistsForMonth(empId, now.getMonthValue(), now.getYear())) {
+            resp.sendRedirect(req.getContextPath() + "/payroll?action=generate&error=AlreadyGenerated");
+            return;
+        }
+        
+        int workingDays = now.lengthOfMonth();
+        int presentDays = attendanceDAO.getPresentDays(empId, now.getMonthValue(), now.getYear());
+        
+        // Build Payroll
+        Payroll p = new Payroll();
+        p.setEmpId(empId);
+        p.setEmpName(emp.getName());
+        p.setDepartment(emp.getDepartment());
+        p.setBasicSalary(emp.getBasicSalary());
+        p.setPayDate(Date.valueOf(now));
+        
+        // Calculate Proportional Salary
+        double fullBasic = emp.getBasicSalary();
+        double proratedRatio = workingDays > 0 ? (double) presentDays / workingDays : 0.0;
+        
+        double earnedBasic = fullBasic * proratedRatio;
+        
+        p.setWorkingDays(workingDays);
+        p.setPaidDays(presentDays);
+        p.setLopDeduction(0.0); // Set LOP to 0 because earnings are already prorated
+        
+        // Use full basic for reference in model, but the UI usually shows earned or full.
+        // We'll set p.setBasicSalary to earnedBasic so the Payslip shows what they actually get for the days worked.
+        p.setBasicSalary(earnedBasic);
+        p.setHra(TaxCalculator.calculateHRA(earnedBasic));
+        p.setDa(TaxCalculator.calculateDA(earnedBasic));
+        p.setBonus(TaxCalculator.calculateBonus(earnedBasic));
+        
+        double earnedGross = earnedBasic + p.getHra() + p.getDa() + p.getBonus();
+        p.setGrossSalary(earnedGross);
+        
+        // Deductions
+        p.setPfDeduction(TaxCalculator.calculatePF(earnedBasic));
+        p.setEsiDeduction(TaxCalculator.calculateESI(earnedGross));
+        p.setTdsDeduction(TaxCalculator.calculateTDS(earnedGross));
+        
+        double net = earnedGross - p.getPfDeduction() - p.getEsiDeduction() - p.getTdsDeduction();
+        p.setNetSalary(net);
 
-            // Build and persist payroll record
-            Payroll payroll = PayrollDAO.buildPayroll(emp);
-            boolean saved   = payrollDAO.savePayroll(payroll);
-
-            if (!saved) {
-                req.setAttribute("error", "Failed to save payroll. Please try again.");
-                req.setAttribute("employees", employeeDAO.getAllEmployees());
-                req.getRequestDispatcher("/WEB-INF/views/generateSalary.jsp").forward(req, resp);
-                return;
-            }
-
-            // Show generated salary slip
-            req.setAttribute("payroll", payroll);
+        if (payrollDAO.savePayroll(p)) {
+            // Send Email Notification
+            EmailService.sendPayslipNotification(emp, p);
+            
+            req.setAttribute("payroll", p);
             req.setAttribute("employee", emp);
             req.getRequestDispatcher("/WEB-INF/views/salarySlip.jsp").forward(req, resp);
-
-        } catch (NumberFormatException e) {
-            resp.sendRedirect(req.getContextPath() + "/payroll?action=generate");
-        }
-    }
-
-    private void showEmployeeHistory(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        String empIdStr = req.getParameter("empId");
-        if (empIdStr == null || empIdStr.trim().isEmpty()) {
-            resp.sendRedirect(req.getContextPath() + "/payroll");
-            return;
-        }
-        try {
-            int empId       = Integer.parseInt(empIdStr.trim());
-            Employee emp    = employeeDAO.getEmployeeById(empId);
-            List<Payroll> history = payrollDAO.getPayrollByEmployee(empId);
-
-            req.setAttribute("employee", emp);
-            req.setAttribute("payrolls", history);
-            req.getRequestDispatcher("/WEB-INF/views/payrollHistory.jsp").forward(req, resp);
-
-        } catch (NumberFormatException e) {
-            resp.sendRedirect(req.getContextPath() + "/payroll");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/payroll?action=generate&error=SaveFailed");
         }
     }
 }

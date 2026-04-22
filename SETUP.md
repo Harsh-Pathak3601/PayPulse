@@ -20,7 +20,7 @@ PayPulse/
 ├── pom.xml                ← Maven dependencies (Jakarta EE)
 ├── .env                   ← Private database credentials
 ├── database/
-│   └── schema.sql         ← MySQL schema for creation
+│   └── schema_v2.sql         ← MySQL schema for creation
 ├── src/main/
 │   ├── java/com/payroll/
 │   │   ├── model/         ← Employee & Payroll POJOs
@@ -48,9 +48,9 @@ PayPulse/
 ## 🗄️ Step 1 — Database Setup
 
 1.  Open MySQL Workbench or your terminal.
-2.  Run the code in [schema.sql](database/schema.sql) to create the `payroll_db` and tables.
+2.  Run the code in [schema_v2.sql](database/schema_v2.sql) to create the `payroll_db` and tables.
     ```bash
-    mysql -u root -p < database/schema.sql
+    mysql -u root -p < database/schema_v2.sql
     ```
 
 ---

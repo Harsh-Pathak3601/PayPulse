@@ -12,7 +12,10 @@ import java.sql.SQLException;
  */
 public class DBConnection {
 
-    private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+    private static final Dotenv dotenv = Dotenv.configure()
+            .directory("C:/Users/patha/OneDrive/Desktop/Employee-Payroll/")
+            .ignoreIfMissing()
+            .load();
 
     private static final String DB_URL      = dotenv.get("DB_URL");
     private static final String DB_USER     = dotenv.get("DB_USER");

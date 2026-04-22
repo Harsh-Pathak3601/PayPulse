@@ -1,227 +1,76 @@
 package com.payroll.servlet;
 
+import com.payroll.dao.DepartmentDAO;
 import com.payroll.dao.EmployeeDAO;
 import com.payroll.model.Employee;
-
+import com.payroll.util.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.sql.Date;
 
-/**
- * EmployeeServlet - Central controller for all employee CRUD operations.
- *
- * Route mapping (via 'action' parameter):
- *  GET  /employees              → list all (with search/filter)
- *  GET  /employees?action=add   → show add form
- *  POST /employees?action=add   → process add
- *  GET  /employees?action=edit  → show edit form
- *  POST /employees?action=edit  → process update
- *  GET  /employees?action=delete → process delete
- */
 @WebServlet("/employees")
 public class EmployeeServlet extends HttpServlet {
 
     private final EmployeeDAO employeeDAO = new EmployeeDAO();
+    private final DepartmentDAO departmentDAO = new DepartmentDAO();
+    private final com.payroll.dao.DesignationDAO designationDAO = new com.payroll.dao.DesignationDAO();
 
-    // ── Auth helper ─────────────────────────────────────────────────────────────
-    private boolean isAuthenticated(HttpServletRequest req) {
-        HttpSession s = req.getSession(false);
-        return s != null && s.getAttribute("loggedIn") != null;
-    }
-
-    // ── GET ──────────────────────────────────────────────────────────────────────
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        if (!isAuthenticated(req)) { resp.sendRedirect(req.getContextPath() + "/login"); return; }
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SessionUtil.requireAdmin(req, resp);
 
         String action = req.getParameter("action");
-        if (action == null) action = "list";
+        System.out.println("[EmployeeServlet] Received request for action: " + action);
 
-        switch (action) {
-            case "add":
-                req.getRequestDispatcher("/WEB-INF/views/addEmployee.jsp").forward(req, resp);
-                break;
-
-            case "edit":
-                showEditForm(req, resp);
-                break;
-
-            case "delete":
-                deleteEmployee(req, resp);
-                break;
-
-            default:
-                listEmployees(req, resp);
-        }
-    }
-
-    // ── POST ─────────────────────────────────────────────────────────────────────
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        if (!isAuthenticated(req)) { resp.sendRedirect(req.getContextPath() + "/login"); return; }
-
-        String action = req.getParameter("action");
-        if (action == null) action = "";
-
-        switch (action) {
-            case "add":
-                addEmployee(req, resp);
-                break;
-            case "edit":
-                updateEmployee(req, resp);
-                break;
-            default:
-                resp.sendRedirect(req.getContextPath() + "/employees");
-        }
-    }
-
-    // ── Handlers ─────────────────────────────────────────────────────────────────
-
-    private void listEmployees(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        String search     = req.getParameter("search");
-        String department = req.getParameter("department");
-
-        req.setAttribute("employees",   employeeDAO.getAllEmployees(search, department));
-        req.setAttribute("departments", employeeDAO.getAllDepartments());
-        req.setAttribute("search",      search);
-        req.setAttribute("filterDept",  department);
-        req.getRequestDispatcher("/WEB-INF/views/viewEmployees.jsp").forward(req, resp);
-    }
-
-    private void showEditForm(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        try {
-            int empId = Integer.parseInt(req.getParameter("id"));
-            Employee emp = employeeDAO.getEmployeeById(empId);
-            if (emp == null) {
-                req.getSession().setAttribute("errorMsg", "Employee not found.");
-                resp.sendRedirect(req.getContextPath() + "/employees");
-                return;
-            }
-            req.setAttribute("employee", emp);
-            req.getRequestDispatcher("/WEB-INF/views/editEmployee.jsp").forward(req, resp);
-        } catch (NumberFormatException e) {
-            resp.sendRedirect(req.getContextPath() + "/employees");
-        }
-    }
-
-    private void addEmployee(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        String name        = req.getParameter("name");
-        String department  = req.getParameter("department");
-        String designation = req.getParameter("designation");
-        String salaryStr   = req.getParameter("basicSalary");
-
-        // Backend validation
-        String validationError = validateEmployeeInput(name, department, designation, salaryStr);
-        if (validationError != null) {
-            req.setAttribute("error", validationError);
+        if ("add".equals(action)) {
+            var depts = departmentDAO.getAllDepartments();
+            var desigs = designationDAO.getAllDesignations();
+            System.out.println("[EmployeeServlet] Loading Add Form. Depts: " + depts.size() + ", Desigs: " + desigs.size());
+            
+            req.setAttribute("departments", depts);
+            req.setAttribute("designations", desigs);
+            req.setAttribute("activePage", "addEmployee");
             req.getRequestDispatcher("/WEB-INF/views/addEmployee.jsp").forward(req, resp);
-            return;
-        }
-
-        Employee emp = new Employee();
-        emp.setName(name.trim());
-        emp.setDepartment(department.trim());
-        emp.setDesignation(designation.trim());
-        emp.setBasicSalary(Double.parseDouble(salaryStr.trim()));
-
-        boolean success = employeeDAO.addEmployee(emp);
-        if (success) {
-            req.getSession().setAttribute("successMsg", "Employee '" + emp.getName() + "' added successfully!");
+        } else if ("edit".equals(action)) {
+            int id = Integer.parseInt(req.getParameter("id"));
+            req.setAttribute("employee", employeeDAO.getEmployeeById(id));
+            req.setAttribute("departments", departmentDAO.getAllDepartments());
+            req.setAttribute("designations", designationDAO.getAllDesignations());
+            req.getRequestDispatcher("/WEB-INF/views/editEmployee.jsp").forward(req, resp);
         } else {
-            req.getSession().setAttribute("errorMsg", "Failed to add employee. Please try again.");
+            req.setAttribute("employees", employeeDAO.getAllEmployees());
+            req.setAttribute("activePage", "employees");
+            req.getRequestDispatcher("/WEB-INF/views/viewEmployees.jsp").forward(req, resp);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SessionUtil.requireAdmin(req, resp);
+        
+        String action = req.getParameter("action");
+        Employee emp = new Employee();
+        emp.setName(req.getParameter("name"));
+        emp.setEmail(req.getParameter("email"));
+        emp.setPhone(req.getParameter("phone"));
+        emp.setDeptId(Integer.parseInt(req.getParameter("deptId")));
+        emp.setDesignation(req.getParameter("designation"));
+        emp.setBasicSalary(Double.parseDouble(req.getParameter("basicSalary")));
+        emp.setJoinDate(Date.valueOf(req.getParameter("joinDate")));
+        emp.setEmployeeType(req.getParameter("employeeType"));
+
+        if ("add".equals(action)) {
+            emp.setPasswordHash(req.getParameter("password")); // Demo: plain text. Real: use hash.
+            employeeDAO.addEmployee(emp);
+        } else if ("edit".equals(action)) {
+            emp.setEmpId(Integer.parseInt(req.getParameter("empId")));
+            employeeDAO.updateEmployee(emp);
+        } else if ("delete".equals(action)) {
+            employeeDAO.deleteEmployee(Integer.parseInt(req.getParameter("empId")));
+        }
+        
         resp.sendRedirect(req.getContextPath() + "/employees");
-    }
-
-    private void updateEmployee(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        String idStr       = req.getParameter("empId");
-        String name        = req.getParameter("name");
-        String department  = req.getParameter("department");
-        String designation = req.getParameter("designation");
-        String salaryStr   = req.getParameter("basicSalary");
-
-        String validationError = validateEmployeeInput(name, department, designation, salaryStr);
-        if (validationError != null) {
-            // Re-fetch and show edit form with error
-            try {
-                int empId = Integer.parseInt(idStr);
-                Employee emp = employeeDAO.getEmployeeById(empId);
-                req.setAttribute("employee", emp);
-                req.setAttribute("error", validationError);
-                req.getRequestDispatcher("/WEB-INF/views/editEmployee.jsp").forward(req, resp);
-            } catch (NumberFormatException e) {
-                resp.sendRedirect(req.getContextPath() + "/employees");
-            }
-            return;
-        }
-
-        try {
-            Employee emp = new Employee();
-            emp.setEmpId(Integer.parseInt(idStr.trim()));
-            emp.setName(name.trim());
-            emp.setDepartment(department.trim());
-            emp.setDesignation(designation.trim());
-            emp.setBasicSalary(Double.parseDouble(salaryStr.trim()));
-
-            boolean success = employeeDAO.updateEmployee(emp);
-            if (success) {
-                req.getSession().setAttribute("successMsg", "Employee updated successfully!");
-            } else {
-                req.getSession().setAttribute("errorMsg", "Update failed. Please try again.");
-            }
-            resp.sendRedirect(req.getContextPath() + "/employees");
-
-        } catch (NumberFormatException e) {
-            resp.sendRedirect(req.getContextPath() + "/employees");
-        }
-    }
-
-    private void deleteEmployee(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        try {
-            int empId = Integer.parseInt(req.getParameter("id"));
-            boolean success = employeeDAO.deleteEmployee(empId);
-            if (success) {
-                req.getSession().setAttribute("successMsg", "Employee deleted successfully.");
-            } else {
-                req.getSession().setAttribute("errorMsg", "Could not delete employee.");
-            }
-        } catch (NumberFormatException e) {
-            req.getSession().setAttribute("errorMsg", "Invalid employee ID.");
-        }
-        resp.sendRedirect(req.getContextPath() + "/employees");
-    }
-
-    // ── Validation ───────────────────────────────────────────────────────────────
-
-    /**
-     * Validates employee form inputs.
-     * @return error message string, or null if all inputs are valid.
-     */
-    private String validateEmployeeInput(String name, String department,
-                                          String designation, String salaryStr) {
-        if (name == null || name.trim().isEmpty())        return "Employee name is required.";
-        if (name.trim().length() < 2)                     return "Name must be at least 2 characters.";
-        if (department == null || department.trim().isEmpty()) return "Department is required.";
-        if (designation == null || designation.trim().isEmpty()) return "Designation is required.";
-        if (salaryStr == null || salaryStr.trim().isEmpty()) return "Basic salary is required.";
-        try {
-            double salary = Double.parseDouble(salaryStr.trim());
-            if (salary <= 0) return "Salary must be a positive number.";
-        } catch (NumberFormatException e) {
-            return "Invalid salary format. Enter a numeric value.";
-        }
-        return null; // all valid
     }
 }
