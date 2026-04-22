@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# PayPulse
-=======
 # <p align="center">💳 PayPulse — Employee Payroll Management System</p>
 
 <p align="center">
@@ -17,8 +14,8 @@
 
 - **🚀 Admin Dashboard**: Real-time stats with a beautiful dark-glass UI.
 - **👥 Employee Management**: Full CRUD operations for team records.
-- **💰 Smart Payroll**: Automatic calculation of HRA (20%), DA (10%), Bonus (5%), and Deductions (5%).
-- **📄 Pro Salary Slips**: Generate and print professional salary slips in one click.
+- **💰 Smart Proportional Payroll**: Automatic calculation of HRA, DA, Bonus, and Deductions based directly on the actual **Paid Days** vs. Total Working Days in the month.
+- **📄 PDF Salary Slips & Emails**: Automatically generates professional, T-account style PDF salary slips with company branding and emails them directly to employees.
 - **🔒 High Security**: 
   - **Environment variables** (.env) to protect database passwords.
   - **Jakarta EE** modern standards for Tomcat 10.
@@ -68,4 +65,3 @@ Move the generated `target/PayPulse.war` to your Tomcat `webapps/` folder and st
 <p align="center">
   Built with ❤️ for Harsh Pathak
 </p>
->>>>>>> 4d3faed (Initial commit: PayPulse Management System — Jakarta EE 10 Modern Rebranding)

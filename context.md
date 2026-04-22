@@ -66,21 +66,23 @@ The system uses a relational database with 7 core tables:
 ## 6. Core Logic & Workflow
 
 ### 💰 Payroll Computation Engine
-Located in `TaxCalculator.java`, the system calculates salary using the following formula:
-1.  **Gross Earnings** = `Basic` + `HRA (20%)` + `DA (10%)` + `Bonus (5%)`
-2.  **Statutory Deductions**:
-    *   **PF**: 12% of Basic.
-    *   **ESI**: 0.75% of Gross (if Gross < ₹21k).
+Located in `PayrollServlet.java` & `TaxCalculator.java`, the system calculates salary dynamically based on attendance:
+1.  **Prorated Basic Calculation**: `Earned Basic` = `(Paid Days / Total Working Days) * Monthly Basic`.
+2.  **Gross Earnings**: Calculated directly off the *Earned Basic* (not full basic) to accurately reflect partial months. 
+    * `Gross` = `Earned Basic` + `HRA (20%)` + `DA (10%)` + `Bonus (5%)`
+3.  **Statutory Deductions**:
+    *   **PF**: 12% of *Earned Basic*.
+    *   **ESI**: 0.75% of *Earned Gross* (if Gross <= ₹21k).
     *   **TDS**: Slab-based monthly projection of annual income.
-3.  **Attendance Impact**:
-    *   **LOP**: `(Basic / WorkingDays) * AbsentDays`.
-4.  **Net Salary** = `Gross` - `(PF + ESI + TDS + LOP)`.
+4.  **Net Salary** = `Earned Gross` - `(PF + ESI + TDS)`.
+5.  **Duplicate Prevention**: `PayrollDAO` ensures a specific employee cannot have multiple salary slips generated for the same calendar month.
 
-### 📧 Automated Notifications
+### 📧 Automated Notifications & Documents
 When an Admin generates payroll:
-1.  The record is persisted in the `payroll` table.
-2.  `EmailService` is triggered asynchronously.
-3.  An HTML-formatted payslip summary is sent to the employee's registered email via SMTP.
+1.  The record is safely persisted in the `payroll` table.
+2.  `PdfGenerator.java` builds a professional, corporate-branded PDF document representing the salary slip.
+3.  `EmailService` is triggered asynchronously.
+4.  An HTML-formatted payslip summary, along with the **attached PDF file**, is sent to the employee's registered email via SMTP.
 
 ### 🔒 Security Model
 - **Admin Role**: Full access to all modules (Departments, Employees, Attendance, Reports).
