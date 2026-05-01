@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @WebServlet("/dashboard")
@@ -21,14 +22,16 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         SessionUtil.requireAdmin(req, resp);
 
+        List<com.payroll.model.Payroll> allPayrolls = payrollDAO.getAllPayroll();
+        
         req.setAttribute("totalEmployees", employeeDAO.getAllEmployees().size());
-        req.setAttribute("totalPayrolls",  payrollDAO.getAllPayroll().size());
+        req.setAttribute("totalPayrolls",  allPayrolls.size());
         req.setAttribute("totalDepts",     departmentDAO.getAllDepartments().size());
-        req.setAttribute("recentPayrolls", payrollDAO.getAllPayroll().stream().limit(5).collect(Collectors.toList()));
+        req.setAttribute("recentPayrolls", allPayrolls.stream().limit(5).collect(Collectors.toList()));
         req.setAttribute("activePage", "dashboard");
 
         // Monthly payroll spend: sum of net salaries from all payroll records
-        double monthlySpend = payrollDAO.getAllPayroll().stream()
+        double monthlySpend = allPayrolls.stream()
                 .mapToDouble(p -> p.getNetSalary())
                 .sum();
         req.setAttribute("monthlySpend", monthlySpend);
