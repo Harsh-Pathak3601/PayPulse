@@ -1,7 +1,7 @@
 # <p align="center">💳 PayPulse — Enterprise Payroll Management System</p>
 
 <p align="center">
-  <img src="src/main/webapp/public/images/logo.png" alt="PayPulse Logo" width="120" onerror="this.style.display='none'">
+  <img src="src/main/webapp/public/images/logo.webp" alt="PayPulse Logo" width="120" onerror="this.style.display='none'">
 </p>
 
 <p align="center">
