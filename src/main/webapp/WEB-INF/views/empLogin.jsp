@@ -250,9 +250,9 @@
         <div class="brand-content">
             <div class="image-composition" style="position: relative; width: 100%; max-width: 500px; aspect-ratio: 1; margin: 0 auto;">
                 <!-- Frame Image (Background Layer - Smaller Offset) -->
-                <img src="${pageContext.request.contextPath}/public/images/frame.png" alt="Frame" style="position: absolute; bottom: 0; right: 0; width: 85%; height: 85%; object-fit: contain; z-index: 1; opacity: 0.8;" />
+                <img src="${pageContext.request.contextPath}/public/images/frame.png" alt="Frame" style="position: absolute; bottom: 0; right: 0; width: 85%; height: 85%; object-fit: contain; z-index: 1; opacity: 0.8;" loading="lazy" />
                 <!-- Employee Image (Foreground Layer - Much Larger) -->
-                <img src="${pageContext.request.contextPath}/public/images/employee.webp" alt="Employee" style="position: absolute; top: 0; left: 0; width: 88%; height: 88%; object-fit: cover; z-index: 2; border-radius: 20px; box-shadow: 12px 12px 30px rgba(0,0,0,0.4);" />
+                <img src="${pageContext.request.contextPath}/public/images/employee.webp" alt="Employee" style="position: absolute; top: 0; left: 0; width: 88%; height: 88%; object-fit: cover; z-index: 2; border-radius: 20px; box-shadow: 12px 12px 30px rgba(0,0,0,0.4);" loading="lazy" />
             </div>
         </div>
     </div>

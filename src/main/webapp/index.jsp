@@ -25,11 +25,11 @@
             font-family: 'Inter', sans-serif;
             /* Override global style.css background */
             background: none !important;
-            background-image: url('<%= request.getContextPath() %>/public/bg.jpg') !important;
+            background-image: url('<%= request.getContextPath() %>/public/bg.webp') !important;
             background-size: cover !important;
             background-position: center center !important;
             background-repeat: no-repeat !important;
-            background-attachment: fixed !important;
+            background-attachment: scroll !important; /* Fixed causes lag on mobile */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -96,8 +96,8 @@
         .glass-card {
             width: 270px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 24px;
             padding: 44px 28px 36px;
