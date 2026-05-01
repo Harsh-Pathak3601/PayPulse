@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
@@ -23,7 +24,7 @@ public class DashboardServlet extends HttpServlet {
         req.setAttribute("totalEmployees", employeeDAO.getAllEmployees().size());
         req.setAttribute("totalPayrolls",  payrollDAO.getAllPayroll().size());
         req.setAttribute("totalDepts",     departmentDAO.getAllDepartments().size());
-        req.setAttribute("recentPayrolls", payrollDAO.getAllPayroll().stream().limit(5).toList());
+        req.setAttribute("recentPayrolls", payrollDAO.getAllPayroll().stream().limit(5).collect(Collectors.toList()));
         req.setAttribute("activePage", "dashboard");
 
         // Monthly payroll spend: sum of net salaries from all payroll records
