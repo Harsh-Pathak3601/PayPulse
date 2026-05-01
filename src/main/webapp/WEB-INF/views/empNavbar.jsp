@@ -32,3 +32,27 @@
         </a>
     </div>
 </aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const topBar = document.querySelector('.top-bar');
+
+    if (topBar && !document.querySelector('.menu-toggle')) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'menu-toggle';
+        toggleBtn.innerHTML = '☰';
+        toggleBtn.onclick = toggleSidebar;
+        topBar.prepend(toggleBtn);
+    }
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+    }
+
+    overlay.onclick = toggleSidebar;
+});
+</script>
