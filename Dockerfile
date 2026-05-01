@@ -6,7 +6,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application in Tomcat
-FROM tomcat:10.1-jdk11-slim
+FROM tomcat:10-jdk11
 WORKDIR /usr/local/tomcat
 
 # Remove default webapps
