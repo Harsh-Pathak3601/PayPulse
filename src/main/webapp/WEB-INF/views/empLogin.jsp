@@ -200,7 +200,7 @@
     <div class="form-side">
         <div class="form-wrap">
             <div class="form-logo">
-                <img src="${pageContext.request.contextPath}/public/images/logo.png" alt="PayPulse"/>
+                <img src="${pageContext.request.contextPath}/public/images/logo.webp" alt="PayPulse"/>
             </div>
 
             <div class="form-heading">

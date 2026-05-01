@@ -181,7 +181,7 @@
     <div class="hero-container">
         <!-- Brand -->
         <div class="brand-header">
-            <img src="<%= request.getContextPath() %>/public/images/logo.png" alt="PayPulse Logo" onerror="this.style.display='none'"/>
+            <img src="<%= request.getContextPath() %>/public/images/logo.webp" alt="PayPulse Logo" onerror="this.style.display='none'"/>
             <h1>PayPulse</h1>
             <p>Select your portal to continue</p>
         </div>

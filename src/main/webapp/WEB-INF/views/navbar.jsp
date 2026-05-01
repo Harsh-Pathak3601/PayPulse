@@ -3,7 +3,7 @@
 <aside class="sidebar">
     <div class="sidebar-logo">
         <a href="${pageContext.request.contextPath}/dashboard" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
-            <img src="${pageContext.request.contextPath}/public/images/logo.png" alt="PayPulse Logo" style="height: 38px; width: auto;">
+            <img src="${pageContext.request.contextPath}/public/images/logo.webp" alt="PayPulse Logo" style="height: 38px; width: auto;">
             <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-primary); letter-spacing: -0.5px;">PayPulse</span>
         </a>
     </div>
