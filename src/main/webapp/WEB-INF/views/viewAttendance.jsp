@@ -10,26 +10,43 @@
 </head>
 <body>
 <div class="app-wrapper">
-    <!-- Include Employee Sidebar (if applicable) or use simplified nav -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">
-            <img src="${pageContext.request.contextPath}/public/images/logo.png" alt="Logo" style="height: 38px;"/>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="${pageContext.request.contextPath}/emp-portal" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
-            <a href="${pageContext.request.contextPath}/leaves" class="nav-item"><span class="nav-icon">🍃</span> Apply Leave</a>
-            <a href="${pageContext.request.contextPath}/attendance" class="nav-item active"><span class="nav-icon">📅</span> My Attendance</a>
-        </nav>
-        <div class="sidebar-footer">
-            <a href="${pageContext.request.contextPath}/logout" class="nav-item" style="color:var(--accent-danger);"><span class="nav-icon">🚪</span> Logout</a>
-        </div>
-    </aside>
+    <jsp:include page="/WEB-INF/views/empNavbar.jsp"/>
 
     <div class="main-content">
         <header class="top-bar">
             <div class="top-bar-title">📅 My Attendance Record</div>
         </header>
         <div class="page-body">
+            <!-- Filter Section -->
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-body">
+                    <form action="${pageContext.request.contextPath}/attendance" method="GET" class="filter-form" style="display: flex; gap: 15px; align-items: flex-end;">
+                        <div class="form-group" style="margin: 0; flex: 1;">
+                            <label class="form-label">Month</label>
+                            <select name="month" class="form-control">
+                                <option value="1" ${selectedMonth == 1 ? 'selected' : ''}>January</option>
+                                <option value="2" ${selectedMonth == 2 ? 'selected' : ''}>February</option>
+                                <option value="3" ${selectedMonth == 3 ? 'selected' : ''}>March</option>
+                                <option value="4" ${selectedMonth == 4 ? 'selected' : ''}>April</option>
+                                <option value="5" ${selectedMonth == 5 ? 'selected' : ''}>May</option>
+                                <option value="6" ${selectedMonth == 6 ? 'selected' : ''}>June</option>
+                                <option value="7" ${selectedMonth == 7 ? 'selected' : ''}>July</option>
+                                <option value="8" ${selectedMonth == 8 ? 'selected' : ''}>August</option>
+                                <option value="9" ${selectedMonth == 9 ? 'selected' : ''}>September</option>
+                                <option value="10" ${selectedMonth == 10 ? 'selected' : ''}>October</option>
+                                <option value="11" ${selectedMonth == 11 ? 'selected' : ''}>November</option>
+                                <option value="12" ${selectedMonth == 12 ? 'selected' : ''}>December</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin: 0; flex: 1;">
+                            <label class="form-label">Year</label>
+                            <input type="number" name="year" class="form-control" value="${selectedYear}" min="2020" max="2100"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </form>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-body">
                     <table class="table">

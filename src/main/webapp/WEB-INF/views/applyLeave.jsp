@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="app-wrapper">
-    <jsp:include page="/WEB-INF/views/navbar.jsp"/>
+    <jsp:include page="/WEB-INF/views/empNavbar.jsp"/>
     <div class="main-content">
         <header class="top-bar">
             <div class="top-bar-title">Apply for Leave</div>

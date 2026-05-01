@@ -24,8 +24,21 @@ public class AttendanceServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/markAttendance.jsp").forward(req, resp);
         } else if (SessionUtil.isEmployeeLoggedIn(req)) {
             int empId = (int) req.getSession().getAttribute("empId");
+            
+            // Get requested month/year or default to current
             LocalDate now = LocalDate.now();
-            req.setAttribute("attendance", attendanceDAO.getMonthlyAttendance(empId, now.getMonthValue(), now.getYear()));
+            int month = now.getMonthValue();
+            int year = now.getYear();
+            
+            String mParam = req.getParameter("month");
+            String yParam = req.getParameter("year");
+            
+            if (mParam != null && !mParam.isEmpty()) month = Integer.parseInt(mParam);
+            if (yParam != null && !yParam.isEmpty()) year = Integer.parseInt(yParam);
+            
+            req.setAttribute("selectedMonth", month);
+            req.setAttribute("selectedYear", year);
+            req.setAttribute("attendance", attendanceDAO.getMonthlyAttendance(empId, month, year));
             req.getRequestDispatcher("/WEB-INF/views/viewAttendance.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/login");

@@ -137,7 +137,7 @@
         /* ══ RIGHT: Brand Panel ══ */
         .brand-side {
             position: relative;
-            background: linear-gradient(160deg, #030d0a 0%, #061210 40%, #082018 100%);
+            background: #070d1a;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -145,19 +145,8 @@
             padding: 60px 56px;
             overflow: hidden;
         }
-        .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; }
-        .blob-1 { width: 450px; height: 450px; background: radial-gradient(circle, #00c9a7 0%, transparent 70%); top: -120px; right: -120px; animation: drift 12s ease-in-out infinite alternate; }
-        .blob-2 { width: 300px; height: 300px; background: radial-gradient(circle, #22c55e 0%, transparent 70%); bottom: -80px; left: -80px; animation: drift 16s ease-in-out infinite alternate-reverse; }
-        @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(25px, 18px) scale(1.07); } }
-        .brand-side::before {
-            content: '';
-            position: absolute; inset: 0;
-            background-image:
-                linear-gradient(rgba(0,201,167,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,201,167,0.03) 1px, transparent 1px);
-            background-size: 48px 48px;
-        }
-        .brand-content { position: relative; z-index: 2; text-align: center; width: 100%; max-width: 420px; }
+        
+        .brand-content { position: relative; z-index: 2; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; }
 
         .brand-logo { margin-bottom: 28px; }
         .brand-logo img {
@@ -259,40 +248,11 @@
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="brand-content">
-            <div class="brand-logo">
-                <img src="${pageContext.request.contextPath}/public/images/logo.png" alt="PayPulse"/>
-            </div>
-            <div class="brand-title">PayPulse ESS</div>
-            <div class="brand-sub">Employee Self-Service Portal</div>
-            <div class="benefit-cards">
-                <div class="bc">
-                    <div class="bc-icon">📄</div>
-                    <div class="bc-info">
-                        <strong>Download Payslips</strong>
-                        <span>Access all your monthly salary slips anytime</span>
-                    </div>
-                </div>
-                <div class="bc">
-                    <div class="bc-icon">📅</div>
-                    <div class="bc-info">
-                        <strong>Track Attendance</strong>
-                        <span>See daily records and monthly summary</span>
-                    </div>
-                </div>
-                <div class="bc">
-                    <div class="bc-icon">🍃</div>
-                    <div class="bc-info">
-                        <strong>Apply for Leaves</strong>
-                        <span>Submit sick, casual & annual leave requests</span>
-                    </div>
-                </div>
-                <div class="bc">
-                    <div class="bc-icon">⚖️</div>
-                    <div class="bc-info">
-                        <strong>Tax Breakdown</strong>
-                        <span>View PF, ESI, TDS & LOP deductions clearly</span>
-                    </div>
-                </div>
+            <div class="image-composition" style="position: relative; width: 100%; max-width: 500px; aspect-ratio: 1; margin: 0 auto;">
+                <!-- Frame Image (Background Layer - Smaller Offset) -->
+                <img src="${pageContext.request.contextPath}/public/images/frame.png" alt="Frame" style="position: absolute; bottom: 0; right: 0; width: 85%; height: 85%; object-fit: contain; z-index: 1; opacity: 0.8;" />
+                <!-- Employee Image (Foreground Layer - Much Larger) -->
+                <img src="${pageContext.request.contextPath}/public/images/employee.webp" alt="Employee" style="position: absolute; top: 0; left: 0; width: 88%; height: 88%; object-fit: cover; z-index: 2; border-radius: 20px; box-shadow: 12px 12px 30px rgba(0,0,0,0.4);" />
             </div>
         </div>
     </div>
