@@ -13,17 +13,25 @@ import java.sql.SQLException;
 public class DBConnection {
 
     private static final Dotenv dotenv = Dotenv.configure()
-            .directory("C:/Users/patha/OneDrive/Desktop/Employee-Payroll/")
             .ignoreIfMissing()
             .load();
 
-    private static final String DB_URL      = dotenv.get("DB_URL");
-    private static final String DB_USER     = dotenv.get("DB_USER");
-    private static final String DB_PASSWORD = dotenv.get("DB_PASSWORD");
+    private static final String DB_URL      = getEnv("DB_URL");
+    private static final String DB_USER     = getEnv("DB_USER");
+    private static final String DB_PASSWORD = getEnv("DB_PASSWORD");
     private static final String DRIVER      = "com.mysql.cj.jdbc.Driver";
 
+    private static String getEnv(String key) {
+        String value = System.getenv(key);
+        if (value == null || value.isEmpty()) {
+            value = dotenv.get(key);
+        }
+        return value;
+    }
+
     // Private constructor prevents instantiation
-    private DBConnection() {}
+    private DBConnection() {
+    }
 
     /**
      * Returns a new JDBC Connection on each call.
@@ -43,7 +51,10 @@ public class DBConnection {
      */
     public static void close(Connection conn) {
         if (conn != null) {
-            try { conn.close(); } catch (SQLException ignored) {}
+            try {
+                conn.close();
+            } catch (SQLException ignored) {
+            }
         }
     }
 }
