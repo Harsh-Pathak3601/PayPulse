@@ -28,9 +28,9 @@
   - Automatic calculation of HRA, DA, Bonus, and Deductions.
   - **PDF Generation**: One-click generation of professional PDF payslips.
 
-### 👤 Employee Portal (greytHR Inspired)
+### 👤 Employee Portal
 - **Personal Dashboard**: View individual stats and attendance overview at a glance.
-- **Attendance History**: **[NEW]** Filter and view attendance records for any previous month and year.
+- **Attendance History**: Filter and view attendance records for any previous month and year.
 - **Leave Management**: Apply for leaves and track approval status in real-time.
 - **Payslip Access**: Download monthly salary slips directly from the portal.
 
