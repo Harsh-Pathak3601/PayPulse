@@ -79,13 +79,12 @@
 
                         <div class="form-group">
                             <label for="designation">Designation <span class="required">*</span></label>
-                            <select name="designation" id="designation" class="form-control" required>
+                            <input list="designationList" name="designation" id="designation" class="form-control" placeholder="Select or type new designation..." value="<c:out value='${employee.designation}'/>" required/>
+                            <datalist id="designationList">
                                 <c:forEach var="des" items="${designations}">
-                                    <option value="${des.desigName}" ${des.desigName == employee.designation ? 'selected' : ''}>
-                                        ${des.desigName}
-                                    </option>
+                                    <option value="${des.desigName}">
                                 </c:forEach>
-                            </select>
+                            </datalist>
                         </div>
 
                         <div class="form-group">

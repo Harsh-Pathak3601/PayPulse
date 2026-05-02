@@ -105,6 +105,19 @@ public class EmployeeDAO {
         }
     }
 
+    public boolean updatePassword(int empId, String newPassword) {
+        String sql = "UPDATE employees SET password_hash=? WHERE emp_id=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // In production, hash this password
+            ps.setInt(2, empId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean deleteEmployee(int id) {
         String sql = "DELETE FROM employees WHERE emp_id=?";
         try (Connection conn = DBConnection.getConnection();

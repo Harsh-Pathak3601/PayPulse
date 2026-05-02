@@ -49,12 +49,12 @@
                             </div>
                             <div>
                                 <label class="form-label">Designation</label>
-                                <select name="designation" class="form-control" required>
-                                    <option value="">Select Designation</option>
+                                <input list="designationList" name="designation" class="form-control" placeholder="Select or type new designation..." required/>
+                                <datalist id="designationList">
                                     <c:forEach var="des" items="${designations}">
-                                        <option value="${des.desigName}">${des.desigName}</option>
+                                        <option value="${des.desigName}">
                                     </c:forEach>
-                                </select>
+                                </datalist>
                             </div>
                             <div>
                                 <label class="form-label">Basic Monthly Salary (₹)</label>

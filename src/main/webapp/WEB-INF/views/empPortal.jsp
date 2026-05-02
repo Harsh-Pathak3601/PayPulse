@@ -17,6 +17,21 @@
             <div class="top-bar-title">Welcome, ${empName}</div>
         </header>
         <div class="page-body">
+            
+            <!-- Alert Messages -->
+            <c:if test="${not empty sessionScope.successMsg}">
+                <div class="alert alert-success" style="margin-bottom: 20px; padding: 12px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; border-radius: 8px;">
+                    ✅ ${sessionScope.successMsg}
+                </div>
+                <c:remove var="successMsg" scope="session"/>
+            </c:if>
+            <c:if test="${not empty sessionScope.errorMsg}">
+                <div class="alert alert-error" style="margin-bottom: 20px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; border-radius: 8px;">
+                    ⚠️ ${sessionScope.errorMsg}
+                </div>
+                <c:remove var="errorMsg" scope="session"/>
+            </c:if>
+
             <div class="stats-grid">
                 <div class="stat-card stat-blue">
                     <div class="stat-info">
@@ -65,8 +80,36 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Change Password Section -->
+            <div class="card" style="margin-top: 20px; max-width: 600px;">
+                <div class="card-header"><div class="card-title">🔒 Change Password</div></div>
+                <div class="card-body" style="padding: 20px;">
+                    <form action="${pageContext.request.contextPath}/emp-portal" method="POST">
+                        <input type="hidden" name="action" value="changePassword"/>
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" name="currentPassword" class="form-control" required/>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label class="form-label">New Password</label>
+                            <input type="password" name="newPassword" class="form-control" minlength="6" required/>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" name="confirmPassword" class="form-control" minlength="6" required/>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Update Password</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+
 </div>
 </body>
 </html>
