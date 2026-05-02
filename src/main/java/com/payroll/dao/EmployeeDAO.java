@@ -24,7 +24,8 @@ public class EmployeeDAO {
             ps.setString(9, emp.getPasswordHash());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error adding employee: " + emp.getName(), e);
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -50,7 +51,7 @@ public class EmployeeDAO {
                 while (rs.next()) employees.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching employees from database", e);
+            e.printStackTrace();
         }
         return employees;
     }

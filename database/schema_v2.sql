@@ -3,8 +3,11 @@
 -- MySQL 8.x compatible
 -- ============================================================
 
--- Note: Database creation and 'USE' statement removed for cloud compatibility.
--- Ensure you are connected to your target database (e.g., 'defaultdb' or 'payroll_db') before running this script.
+CREATE DATABASE IF NOT EXISTS payroll_db
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE payroll_db;
 
 -- 1. Departments Table
 CREATE TABLE IF NOT EXISTS departments (

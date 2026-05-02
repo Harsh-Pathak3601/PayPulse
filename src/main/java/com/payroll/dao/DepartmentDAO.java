@@ -18,7 +18,7 @@ public class DepartmentDAO {
                 depts.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching departments from database", e);
+            e.printStackTrace();
         }
         return depts;
     }
@@ -31,7 +31,8 @@ public class DepartmentDAO {
             ps.setString(2, dept.getDeptHead());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Error adding department: " + dept.getDeptName(), e);
+            e.printStackTrace();
+            return false;
         }
     }
 

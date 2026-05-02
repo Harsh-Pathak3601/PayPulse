@@ -156,9 +156,7 @@
         .brand-title {
             font-size: 2rem; font-weight: 900;
             background: linear-gradient(90deg, #00c9a7 0%, #22c55e 50%, #58a6ff 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
         }
         .brand-sub {
