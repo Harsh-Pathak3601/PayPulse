@@ -14,7 +14,7 @@ public class DepartmentServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!com.payroll.util.SessionUtil.isAdminLoggedIn(req)) {
+        if (!SessionUtil.isAdminLoggedIn(req)) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
@@ -25,7 +25,7 @@ public class DepartmentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!com.payroll.util.SessionUtil.isAdminLoggedIn(req)) {
+        if (!SessionUtil.isAdminLoggedIn(req)) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
