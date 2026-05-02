@@ -14,14 +14,21 @@ import com.payroll.model.Payroll;
 public class EmailService {
 
     private static final Dotenv dotenv = Dotenv.configure()
-            .directory("C:/Users/patha/OneDrive/Desktop/Employee-Payroll/")
             .ignoreIfMissing()
             .load();
 
-    private static final String SMTP_HOST = dotenv.get("SMTP_HOST");
-    private static final String SMTP_PORT = dotenv.get("SMTP_PORT");
-    private static final String SMTP_USER = dotenv.get("SMTP_USER");
-    private static final String SMTP_PASS = dotenv.get("SMTP_PASS");
+    private static final String SMTP_HOST = getEnv("SMTP_HOST");
+    private static final String SMTP_PORT = getEnv("SMTP_PORT");
+    private static final String SMTP_USER = getEnv("SMTP_USER");
+    private static final String SMTP_PASS = getEnv("SMTP_PASS");
+
+    private static String getEnv(String key) {
+        String value = System.getenv(key);
+        if (value == null || value.isEmpty()) {
+            value = dotenv.get(key);
+        }
+        return value;
+    }
 
     public static void sendPayslipNotification(Employee emp, Payroll payroll) {
         if (SMTP_USER == null || SMTP_PASS == null || emp.getEmail() == null) {

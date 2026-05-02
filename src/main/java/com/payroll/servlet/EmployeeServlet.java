@@ -19,18 +19,15 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionUtil.requireAdmin(req, resp);
+        if (!SessionUtil.isAdminLoggedIn(req)) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         String action = req.getParameter("action");
-        System.out.println("[EmployeeServlet] Received request for action: " + action);
-
         if ("add".equals(action)) {
-            var depts = departmentDAO.getAllDepartments();
-            var desigs = designationDAO.getAllDesignations();
-            System.out.println("[EmployeeServlet] Loading Add Form. Depts: " + depts.size() + ", Desigs: " + desigs.size());
-            
-            req.setAttribute("departments", depts);
-            req.setAttribute("designations", desigs);
+            req.setAttribute("departments", departmentDAO.getAllDepartments());
+            req.setAttribute("designations", designationDAO.getAllDesignations());
             req.setAttribute("activePage", "addEmployee");
             req.getRequestDispatcher("/WEB-INF/views/addEmployee.jsp").forward(req, resp);
         } else if ("edit".equals(action)) {
@@ -48,27 +45,37 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionUtil.requireAdmin(req, resp);
+        if (!SessionUtil.isAdminLoggedIn(req)) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
         
         String action = req.getParameter("action");
-        Employee emp = new Employee();
-        emp.setName(req.getParameter("name"));
-        emp.setEmail(req.getParameter("email"));
-        emp.setPhone(req.getParameter("phone"));
-        emp.setDeptId(Integer.parseInt(req.getParameter("deptId")));
-        emp.setDesignation(req.getParameter("designation"));
-        emp.setBasicSalary(Double.parseDouble(req.getParameter("basicSalary")));
-        emp.setJoinDate(Date.valueOf(req.getParameter("joinDate")));
-        emp.setEmployeeType(req.getParameter("employeeType"));
+        try {
+            Employee emp = new Employee();
+            emp.setName(req.getParameter("name"));
+            emp.setEmail(req.getParameter("email"));
+            emp.setPhone(req.getParameter("phone"));
+            String deptIdStr = req.getParameter("deptId");
+            if (deptIdStr != null) emp.setDeptId(Integer.parseInt(deptIdStr));
+            emp.setDesignation(req.getParameter("designation"));
+            String salaryStr = req.getParameter("basicSalary");
+            if (salaryStr != null) emp.setBasicSalary(Double.parseDouble(salaryStr));
+            String joinDateStr = req.getParameter("joinDate");
+            if (joinDateStr != null) emp.setJoinDate(Date.valueOf(joinDateStr));
+            emp.setEmployeeType(req.getParameter("employeeType"));
 
-        if ("add".equals(action)) {
-            emp.setPasswordHash(req.getParameter("password")); // Demo: plain text. Real: use hash.
-            employeeDAO.addEmployee(emp);
-        } else if ("edit".equals(action)) {
-            emp.setEmpId(Integer.parseInt(req.getParameter("empId")));
-            employeeDAO.updateEmployee(emp);
-        } else if ("delete".equals(action)) {
-            employeeDAO.deleteEmployee(Integer.parseInt(req.getParameter("empId")));
+            if ("add".equals(action)) {
+                emp.setPasswordHash(req.getParameter("password"));
+                employeeDAO.addEmployee(emp);
+            } else if ("edit".equals(action)) {
+                emp.setEmpId(Integer.parseInt(req.getParameter("empId")));
+                employeeDAO.updateEmployee(emp);
+            } else if ("delete".equals(action)) {
+                employeeDAO.deleteEmployee(Integer.parseInt(req.getParameter("id")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         
         resp.sendRedirect(req.getContextPath() + "/employees");

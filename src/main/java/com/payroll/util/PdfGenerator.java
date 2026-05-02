@@ -33,13 +33,30 @@ public class PdfGenerator {
             headerTable.setWidths(new float[]{1f, 3f});
             
             try {
-                String logoPath = "C:/Users/patha/OneDrive/Desktop/Employee-Payroll/src/main/webapp/public/images/logo.png";
-                Image logo = Image.getInstance(logoPath);
-                logo.scaleToFit(80, 80);
-                PdfPCell logoCell = new PdfPCell(logo);
-                logoCell.setBorder(Rectangle.NO_BORDER);
-                logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                headerTable.addCell(logoCell);
+                // Attempt to load logo from common deployment paths
+                String[] possiblePaths = {
+                    "C:/Users/patha/OneDrive/Desktop/Employee-Payroll/src/main/webapp/public/images/logo.png",
+                    "src/main/webapp/public/images/logo.png",
+                    "public/images/logo.png"
+                };
+                
+                Image logo = null;
+                for (String path : possiblePaths) {
+                    try {
+                        logo = Image.getInstance(path);
+                        if (logo != null) break;
+                    } catch (Exception ignored) {}
+                }
+
+                if (logo != null) {
+                    logo.scaleToFit(80, 80);
+                    PdfPCell logoCell = new PdfPCell(logo);
+                    logoCell.setBorder(Rectangle.NO_BORDER);
+                    logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+                    headerTable.addCell(logoCell);
+                } else {
+                    throw new Exception("Logo not found");
+                }
             } catch (Exception e) {
                 PdfPCell fallback = new PdfPCell(new Phrase("PAYPULSE", titleFont));
                 fallback.setBorder(Rectangle.NO_BORDER);

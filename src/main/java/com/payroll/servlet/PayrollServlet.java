@@ -24,7 +24,10 @@ public class PayrollServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionUtil.requireAdmin(req, resp);
+        if (!SessionUtil.isAdminLoggedIn(req)) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         String action = req.getParameter("action");
         if (action == null) action = "list";
@@ -44,7 +47,10 @@ public class PayrollServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionUtil.requireAdmin(req, resp);
+        if (!SessionUtil.isAdminLoggedIn(req)) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         String empIdStr = req.getParameter("empId");
         if (empIdStr == null || empIdStr.trim().isEmpty()) {
@@ -69,7 +75,7 @@ public class PayrollServlet extends HttpServlet {
         }
         
         int workingDays = now.lengthOfMonth();
-        int presentDays = attendanceDAO.getPresentDays(empId, now.getMonthValue(), now.getYear());
+        double presentDays = attendanceDAO.getPresentDays(empId, now.getMonthValue(), now.getYear());
         
         // Build Payroll
         Payroll p = new Payroll();

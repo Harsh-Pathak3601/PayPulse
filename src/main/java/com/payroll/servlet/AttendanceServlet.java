@@ -47,7 +47,10 @@ public class AttendanceServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionUtil.requireAdmin(req, resp);
+        if (!SessionUtil.isAdminLoggedIn(req)) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
         int empId = Integer.parseInt(req.getParameter("empId"));
         Date date = Date.valueOf(req.getParameter("date"));
         String status = req.getParameter("status");

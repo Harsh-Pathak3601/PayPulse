@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS payroll (
     gross_salary  DECIMAL(12,2) NOT NULL,
     net_salary    DECIMAL(12,2) NOT NULL,
     working_days  INT           NOT NULL,
-    paid_days     INT           NOT NULL,
+    paid_days     DECIMAL(4,1)  NOT NULL,
     overtime_pay  DECIMAL(12,2) NOT NULL DEFAULT 0,
     pay_date      DATE          NOT NULL,
     created_at    TIMESTAMP     DEFAULT CURRENT_TIMESTAMP,

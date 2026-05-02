@@ -16,7 +16,10 @@ public class ESSPortalServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionUtil.requireEmployee(req, resp);
+        if (!SessionUtil.isEmployeeLoggedIn(req)) {
+            resp.sendRedirect(req.getContextPath() + "/emp-login");
+            return;
+        }
         int empId = (int) req.getSession().getAttribute("empId");
         
         Employee emp = employeeDAO.getEmployeeById(empId);

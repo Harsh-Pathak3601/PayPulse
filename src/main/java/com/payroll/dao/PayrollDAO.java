@@ -41,7 +41,7 @@ public class PayrollDAO {
             ps.setDouble(10, p.getGrossSalary());
             ps.setDouble(11, p.getNetSalary());
             ps.setInt(12, p.getWorkingDays());
-            ps.setInt(13, p.getPaidDays());
+            ps.setDouble(13, p.getPaidDays());
             ps.setDouble(14, p.getOvertimePay());
             ps.setDate(15, p.getPayDate());
             return ps.executeUpdate() > 0;
@@ -100,7 +100,7 @@ public class PayrollDAO {
         p.setGrossSalary(rs.getDouble("gross_salary"));
         p.setNetSalary(rs.getDouble("net_salary"));
         p.setWorkingDays(rs.getInt("working_days"));
-        p.setPaidDays(rs.getInt("paid_days"));
+        p.setPaidDays(rs.getDouble("paid_days"));
         p.setOvertimePay(rs.getDouble("overtime_pay"));
         p.setPayDate(rs.getDate("pay_date"));
         return p;

@@ -199,11 +199,26 @@
         btn.addEventListener('click', function () {
             var empId   = this.getAttribute('data-id');
             var empName = this.getAttribute('data-name');
-            document.getElementById('deleteMsg').textContent =
-                'Are you sure you want to delete "' + empName + '"? This will also remove all their payroll records.';
-            document.getElementById('deleteConfirmLink').href =
-                contextPath + '/employees?action=delete&id=' + empId;
-            document.getElementById('deleteModal').style.display = 'flex';
+            if (confirm('Are you sure you want to delete "' + empName + '"? This will also remove all their payroll records.')) {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = contextPath + '/employees';
+                
+                var actionInput = document.createElement('input');
+                actionInput.type = 'hidden';
+                actionInput.name = 'action';
+                actionInput.value = 'delete';
+                form.appendChild(actionInput);
+                
+                var idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.name = 'id';
+                idInput.value = empId;
+                form.appendChild(idInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
         });
     });
 

@@ -23,7 +23,7 @@ public class Payroll {
     private double grossSalary;
     private double netSalary;
     private int    workingDays;
-    private int    paidDays;
+    private double paidDays;
     private double overtimePay;
     private Date   payDate;
 
@@ -76,8 +76,8 @@ public class Payroll {
     public int getWorkingDays() { return workingDays; }
     public void setWorkingDays(int workingDays) { this.workingDays = workingDays; }
 
-    public int getPaidDays() { return paidDays; }
-    public void setPaidDays(int paidDays) { this.paidDays = paidDays; }
+    public double getPaidDays() { return paidDays; }
+    public void setPaidDays(double paidDays) { this.paidDays = paidDays; }
 
     public double getOvertimePay() { return overtimePay; }
     public void setOvertimePay(double overtimePay) { this.overtimePay = overtimePay; }

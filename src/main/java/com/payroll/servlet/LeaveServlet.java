@@ -31,7 +31,10 @@ public class LeaveServlet extends HttpServlet {
         String action = req.getParameter("action");
         
         if ("apply".equals(action)) {
-            SessionUtil.requireEmployee(req, resp);
+            if (!SessionUtil.isEmployeeLoggedIn(req)) {
+                resp.sendRedirect(req.getContextPath() + "/emp-login");
+                return;
+            }
             Leave l = new Leave();
             l.setEmpId((int) req.getSession().getAttribute("empId"));
             l.setLeaveType(req.getParameter("type"));
@@ -42,12 +45,17 @@ public class LeaveServlet extends HttpServlet {
             leaveDAO.applyLeave(l);
             resp.sendRedirect(req.getContextPath() + "/emp-portal?msg=LeaveApplied");
         } else if ("approve".equals(action) || "reject".equals(action)) {
-            SessionUtil.requireAdmin(req, resp);
+            if (!SessionUtil.isAdminLoggedIn(req)) {
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
             int id = Integer.parseInt(req.getParameter("leaveId"));
             String status = action.toUpperCase() + "D"; // APPROVED or REJECTED
             String remarks = req.getParameter("remarks");
             leaveDAO.updateLeaveStatus(id, status, remarks);
             resp.sendRedirect(req.getContextPath() + "/leaves");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
         }
     }
 }

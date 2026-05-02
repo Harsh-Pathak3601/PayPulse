@@ -15,9 +15,17 @@
             <div class="top-bar-title">➕ Add New Employee</div>
         </header>
         <div class="page-body">
+            <c:if test="${not empty sessionScope.errorMsg}">
+                <div class="alert alert-error" style="margin-bottom: 20px;">
+                    ⚠️ ${sessionScope.errorMsg}
+                </div>
+                <c:remove var="errorMsg" scope="session"/>
+            </c:if>
+            
             <div class="card">
                 <div class="card-body" style="padding: 30px;">
-                    <form action="${pageContext.request.contextPath}/employees?action=add" method="POST">
+                    <form action="${pageContext.request.contextPath}/employees" method="POST">
+                        <input type="hidden" name="action" value="add"/>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div>
                                 <label class="form-label">Full Name</label>

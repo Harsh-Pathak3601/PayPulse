@@ -52,20 +52,31 @@ public class AttendanceDAO {
         return records;
     }
 
-    public int getPresentDays(int empId, int month, int year) {
-        String sql = "SELECT COUNT(*) FROM attendance WHERE emp_id=? AND status='PRESENT' AND MONTH(att_date)=? AND YEAR(att_date)=?";
+    public double getPresentDays(int empId, int month, int year) {
+        String sql = "SELECT status, COUNT(*) as count FROM attendance "
+                   + "WHERE emp_id=? AND MONTH(att_date)=? AND YEAR(att_date)=? "
+                   + "GROUP BY status";
+        double total = 0;
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, empId);
             ps.setInt(2, month);
             ps.setInt(3, year);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getInt(1);
+                while (rs.next()) {
+                    String status = rs.getString("status");
+                    int count = rs.getInt("count");
+                    if ("PRESENT".equals(status) || "HOLIDAY".equals(status)) {
+                        total += count;
+                    } else if ("HALF_DAY".equals(status)) {
+                        total += (count * 0.5);
+                    }
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return total;
     }
 
     private Attendance mapRow(ResultSet rs) throws SQLException {

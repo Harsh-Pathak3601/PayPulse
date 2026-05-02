@@ -16,7 +16,10 @@ public class ReportsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SessionUtil.requireAdmin(req, resp);
+        if (!SessionUtil.isAdminLoggedIn(req)) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
         String action = req.getParameter("action");
         
         if ("json".equals(action)) {

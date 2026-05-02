@@ -45,10 +45,11 @@
 
                 <form
                     method="post"
-                    action="${pageContext.request.contextPath}/employees?action=edit"
+                    action="${pageContext.request.contextPath}/employees"
                     id="editEmpForm"
                     novalidate
                 >
+                    <input type="hidden" name="action" value="edit"/>
                     <input type="hidden" name="empId" value="${employee.empId}"/>
 
                     <div class="form-grid">
