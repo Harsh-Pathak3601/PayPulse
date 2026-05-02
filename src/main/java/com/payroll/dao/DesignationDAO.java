@@ -20,7 +20,7 @@ public class DesignationDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error fetching designations for department ID: " + deptId, e);
         }
         return desigs;
     }
@@ -35,7 +35,7 @@ public class DesignationDAO {
                 desigs.add(mapRow(rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error fetching all designations", e);
         }
         return desigs;
     }
@@ -48,8 +48,7 @@ public class DesignationDAO {
             ps.setInt(2, desig.getDeptId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new RuntimeException("Error adding designation: " + desig.getDesigName(), e);
         }
     }
 

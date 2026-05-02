@@ -43,7 +43,14 @@ public class DBConnection {
         } catch (ClassNotFoundException e) {
             throw new SQLException("MySQL JDBC Driver not found. Add mysql-connector to classpath.", e);
         }
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        
+        try {
+            return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        } catch (SQLException e) {
+            System.err.println("CRITICAL: Failed to connect to database at " + DB_URL);
+            System.err.println("Error: " + e.getMessage());
+            throw e;
+        }
     }
 
     /**

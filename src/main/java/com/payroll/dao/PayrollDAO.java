@@ -46,8 +46,7 @@ public class PayrollDAO {
             ps.setDate(15, p.getPayDate());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new RuntimeException("Error saving payroll for employee ID: " + p.getEmpId(), e);
         }
     }
 
@@ -61,7 +60,7 @@ public class PayrollDAO {
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) records.add(mapRow(rs));
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error fetching payroll records", e);
         }
         return records;
     }

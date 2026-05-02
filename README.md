@@ -1,88 +1,123 @@
-# <p align="center">💳 PayPulse — Enterprise Payroll Management System</p>
+# <p align="center">💳 PayPulse v2.0 — Enterprise Payroll Management System</p>
 
 <p align="center">
-  <img src="src/main/webapp/public/images/logo.webp" alt="PayPulse Logo" width="120" onerror="this.style.display='none'">
+  <img src="src/main/webapp/public/images/logo.webp" alt="PayPulse Logo" width="160" onerror="this.style.display='none'">
 </p>
 
 <p align="center">
-  <strong>A modern, glassmorphic, and high-performance Employee Management and Payroll automation system.</strong>
+  <strong>A high-performance, glassmorphic, and production-ready Employee Management & Payroll Automation System.</strong>
 </p>
 
 ---
 
-## 🌟 Overview
+## 🌟 Project Overview
 
-**PayPulse** is a production-grade payroll management solution designed with a focus on high-end aesthetics and operational efficiency. It provides a dual-portal experience for Administrators and Employees, featuring a state-of-the-art **Glassmorphic UI** and automated business logic for payroll processing.
+**PayPulse** is a comprehensive ERP-lite solution designed to streamline Human Resources and Financial operations for modern enterprises. Built with a focus on **Visual Excellence** and **Numerical Precision**, PayPulse automates the entire lifecycle of an employee—from onboarding and attendance tracking to complex statutory tax computations and automated payslip generation.
 
----
-
-## ✨ Key Features
-
-### 🏢 Administrator Portal
-- **Dashboard Analytics**: Instant visibility into total employees, department distribution, and monthly payroll expenses.
-- **Employee Management**: Full lifecycle management (CRUD) of employee records with secure profile handling.
-- **Departmental Logic**: Organize teams by departments with custom roles and hierarchies.
-- **Attendance Control**: Manual and automated attendance marking with status tracking (Present, Absent, Half-Day).
-- **Automated Payroll**: 
-  - Proportional salary calculation based on attendance.
-  - Automatic calculation of HRA, DA, Bonus, and Deductions.
-  - **PDF Generation**: One-click generation of professional PDF payslips.
-
-### 👤 Employee Portal
-- **Personal Dashboard**: View individual stats and attendance overview at a glance.
-- **Attendance History**: Filter and view attendance records for any previous month and year.
-- **Leave Management**: Apply for leaves and track approval status in real-time.
-- **Payslip Access**: Download monthly salary slips directly from the portal.
+The system features a dual-portal architecture, providing tailored experiences for Administrators (HR/Finance) and Employees (Self-Service).
 
 ---
 
-## 🎨 Design Philosophy
-- **Modern Aesthetics**: Utilizes a premium **Dark-Glass UI** for the landing page and high-contrast **Light Theme** (greytHR style) for internal portals.
-- **Responsive Layout**: Seamless experience across Mobile, Tablet, and Desktop viewports.
-- **Micro-Animations**: Smooth transitions and hover effects using optimized CSS3 animations.
+## ✨ Key Modules & Features
+
+### 🛡️ Administrator Powerhouse
+- **Dynamic Analytics Dashboard**: Real-time visualization of headcount, department distribution, and monthly financial burn.
+- **Enterprise Employee Management**: Complete CRUD operations with secure profile handling, department assignment, and designation tracking.
+- **Automated Payroll Engine**: 
+  - **Prorated Salary**: Precise calculations based on monthly attendance and working days.
+  - **Tax & Compliance**: Automatic calculation of **HRA (20%)**, **DA (10%)**, **PF (12%)**, and slab-based **TDS**.
+  - **ESI Management**: Automatic ESI deductions for eligible salary brackets.
+- **Attendance & Leaves**: Centralized control over employee presence with status tracking (Present, Absent, Half-Day, Holiday) and a streamlined leave approval workflow.
+- **Document Automation**: One-click professional PDF Payslip generation and automated Email notifications.
+
+### 👤 Employee Self-Service (ESS)
+- **Personalized Portal**: Secure login for employees to manage their own professional data.
+- **Attendance Transparency**: Interactive history of monthly attendance records.
+- **Leave Application**: Real-time leave requests with reason tracking and status updates.
+- **Payslip Vault**: Instant access to download historical and current salary slips in PDF format.
 
 ---
 
-## 🛠️ Technical Stack
-- **Backend**: Java 11 (Jakarta Servlet 5.0)
-- **Frontend**: JSP, JSTL, Vanilla CSS3 (Custom Variables)
-- **Database**: MySQL 8.0 (Optimized with PreparedStatements for security)
-- **Security**: 
-  - Environment-based configuration (`.env`)
-  - Session-based Authentication & Authorization
-  - Protection against SQL Injection and XSS
-- **DevOps**: Maven (Build Tool), Docker (Containerization)
+## 🎨 Design Aesthetics
+
+PayPulse is built with a **Premium UI/UX** philosophy:
+- **Glassmorphic Interface**: Utilizing subtle blurs, vibrant gradients, and high-contrast typography for a futuristic feel.
+- **Responsive Architecture**: Fully optimized for Desktop, Tablet, and Mobile devices.
+- **Micro-Animations**: Smooth CSS3 transitions and hover effects to enhance user engagement.
+- **Dark/Light Harmony**: Elegant dark themes for high-impact landing pages and clean, high-readability light themes for administrative tasks.
 
 ---
 
-## 🚀 Deployment
+## 🛠️ Technology Stack
 
-PayPulse is fully optimized for cloud deployment (Railway, Render, Tomcat). 
-
-- **Ready-to-use Dockerfile**: Included for containerized environments.
-- **Cloud Configuration**: Environment variable support for DB connections.
-- **Detailed Guide**: Check [deployment.md](deployment.md) for step-by-step instructions.
+| Layer | Technology |
+| :--- | :--- |
+| **Backend Core** | Java 11 (Jakarta Servlet 5.0, JSP, JSTL) |
+| **Database** | MySQL 8.x (Optimized with PreparedStatements) |
+| **Frontend** | Vanilla CSS3 (Custom Variables), JavaScript (ES6+), Google Fonts |
+| **Security** | BCrypt/Secure Hashing, Session-based Auth, Dotenv Configuration |
+| **Integrations** | Jakarta Mail (SMTP), OpenPDF (Document Generation) |
+| **DevOps** | Apache Maven, Docker, Environment Injection |
 
 ---
 
-## 🔐 Setup & Installation
+## 📊 Database Architecture
 
-1.  **Clone the Repository**:
-    ```bash
-    git clone https://github.com/Harsh-Pathak3601/PayPulse.git
-    ```
-2.  **Database Configuration**:
-    - Import the SQL schema from the `/database` folder.
-    - Create a `.env` file and add your MySQL credentials.
-3.  **Build the Project**:
-    ```bash
-    mvn clean package
-    ```
-4.  **Run with Tomcat**:
-    Deploy the generated `PayPulse.war` to your Tomcat `webapps/` folder.
+The system utilizes a highly normalized relational schema designed for scalability:
+- **`employees`**: Centralized identity and financial profile.
+- **`departments` & `designations`**: Organizational hierarchy mapping.
+- **`attendance`**: Daily log with overtime tracking.
+- **`leaves` & `leave_balance`**: Automated accrual and deduction engine.
+- **`payroll`**: Financial snapshots of all historical disbursements.
+
+---
+
+## 🚀 Deployment & Installation
+
+### 1. Prerequisites
+- Java 11+
+- Apache Maven 3.6+
+- MySQL 8.0+
+- Apache Tomcat 10.1+
+
+### 2. Local Setup
+1. **Clone & Navigate**:
+   ```bash
+   git clone https://github.com/Harsh-Pathak3601/PayPulse.git
+   cd Employee-Payroll
+   ```
+2. **Environment Config**:
+   Create a `.env` file in the root directory:
+   ```env
+   DB_URL=jdbc:mysql://localhost:3306/payroll_db
+   DB_USER=your_user
+   DB_PASSWORD=your_password
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_USER=your_email
+   SMTP_PASS=your_app_password
+   ```
+3. **Database Import**:
+   Run the SQL script located in `/database/schema_v2.sql`.
+4. **Build & Run**:
+   ```bash
+   mvn clean package
+   # Deploy the target/PayPulse.war to your Tomcat webapps folder
+   ```
+
+### 3. Cloud Deployment (Docker)
+PayPulse is container-ready. Simply set your environment variables in your cloud provider (Railway, Render, Aiven) and deploy using the provided `Dockerfile`.
+
+---
+
+## 🔐 Security Standards
+- **SQL Injection Prevention**: 100% usage of PreparedStatements.
+- **Sensitive Data Isolation**: Credentials managed via environment variables.
+- **Session Guards**: Centralized `SessionUtil` to prevent unauthorized endpoint access.
+- **Fail-Fast DAO**: Robust error handling that prevents silent data failure.
 
 ---
 
 <p align="center">
-  Built with ❤️ for Harsh Pathak3601
+  Built with ❤️ by <strong>Harsh Pathak</strong>
 </p>

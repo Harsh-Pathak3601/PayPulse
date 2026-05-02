@@ -47,7 +47,7 @@ public class DepartmentServlet extends HttpServlet {
                 if (departmentDAO.addDepartment(d)) {
                     session.setAttribute("successMsg", "Department '" + name + "' added successfully!");
                 } else {
-                    session.setAttribute("errorMsg", "Failed to add department. It might already exist.");
+                    session.setAttribute("errorMsg", "Failed to add department. Please check if it already exists or if there is a database connection issue.");
                 }
             }
         } else if ("delete".equals(action)) {
